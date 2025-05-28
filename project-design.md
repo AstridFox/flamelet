@@ -6,7 +6,7 @@
 
 **Flamelet** is a lightweight, browser-based fractal flame renderer built with TypeScript and modern frontend tooling. It supports dynamic, decorative visualizations for creative applications, interactive art, or VJ tooling. It uses Iterated Function Systems (IFS) with affine transformations and nonlinear variation functions to render complex, colorful flame patterns.
 
-This MVP aims to produce static grayscale flame renders with JSON-based preset support and log-density brightness normalization, using a 2D canvas.
+This MVP aims to produce static color flame renders with JSON-based preset support, palette-driven coloring, and log-density brightness normalization, using a 2D canvas.
 
 ---
 
@@ -27,7 +27,7 @@ This MVP aims to produce static grayscale flame renders with JSON-based preset s
 #### 1. **Fractal Flame Presets**
 
 - JSON-serializable format
-- Preset contains canvas size, number of iterations, gamma, and list of FlameFunctions
+- Preset contains canvas size, number of iterations, optional burn-in skip, gamma, and list of FlameFunctions
 
 #### 2. **FlameFunction Format**
 
@@ -46,7 +46,7 @@ Implemented variations include:
 - `swirl`
 - `horseshoe`
 - `sinusoidal`
-Each variation is a function `(x, y, params?) => [x', y']`, where `params` is an optional map of numeric parameters for parameterized variations.
+  Each variation is a function `(x, y, params?) => [x', y']`, where `params` is an optional map of numeric parameters for parameterized variations.
 
 #### 4. **Affine Transformations**
 
@@ -55,11 +55,11 @@ Each variation is a function `(x, y, params?) => [x', y']`, where `params` is an
 
 #### 5. **Renderer**
 
+- Performs initial burn-in iterations to reach the fractal attractor
 - Runs IFS sampling loop
 - Maintains 2D histogram of point hits
 - Applies log-density normalization
-- Renders to `<canvas>` using grayscale shading
-- Gamma correction for brightness smoothing
+- Renders to `<canvas>` using palette-based color shading with gamma correction
 
 #### 6. **Preset Loader**
 
@@ -68,8 +68,8 @@ Each variation is a function `(x, y, params?) => [x', y']`, where `params` is an
 
 #### 7. **Output**
 
-- Displays grayscale flame in canvas
-- Designed for future color + dynamic extensions
+- Displays color flame in canvas
+- Supports dynamic, interactive, and future extensions
 
 ---
 

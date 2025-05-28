@@ -16,6 +16,7 @@ export function renderFlame(
     supersample = 1,
     functions,
     iterations = 100000,
+    burnIn = 20,
     gamma = 1,
     palette: paletteDef,
   } = preset;
@@ -46,8 +47,15 @@ export function renderFlame(
     cumProbs.push(totalProb);
   }
 
-  let x = 0;
-  let y = 0;
+  let x = Math.random() * 2 - 1;
+  let y = Math.random() * 2 - 1;
+  for (let i = 0; i < burnIn; i++) {
+    const r = Math.random() * totalProb;
+    const fnIdx = cumProbs.findIndex((p) => r < p);
+    const index = fnIdx >= 0 ? fnIdx : functions.length - 1;
+    const fn = functions[index];
+    [x, y] = applyFlameFunction(fn, x, y);
+  }
   const xs: number[] = [];
   const ys: number[] = [];
   const idxs: number[] = [];

@@ -1,0 +1,53 @@
+{
+  "width": 1200,
+  "height": 800,
+  "supersample": 4,
+  "iterations": 2500000,
+  "gamma": 1.4,
+  "palette": [
+    "#220066",
+    "#0000ff",
+    "#00ffff",
+    "#00ff00",
+    "#ffff00",
+    "#ff6600",
+    "#ff0000",
+    "#ff00ff",
+    "#ffffff"
+  ],
+  "functions": [
+    {
+      "affine": [0.54, -0.3, -0.7, 0.3, 0.54, 0.7],
+      "variations": { "swirl": 0.6, "linear": 0.4 },
+      "probability": 0.2,
+      "color": 0.0
+    },
+    {
+      "affine": [0.5, 0.2, 0.5, -0.2, 0.5, 0.0],
+      "variations": { "pdj": 1.0 },
+      "parameters": { "pdj": { "a": 1.2, "b": 0.75, "c": 0.4, "d": 1.5 } },
+      "probability": 0.2,
+      "color": 0.25
+    },
+    {
+      "affine": [0.6, 0.1, -0.4, -0.1, 0.6, -0.5],
+      "variations": { "curl": 1.0 },
+      "parameters": { "curl": { "a": 0.3, "b": 1.2 } },
+      "probability": 0.2,
+      "color": 0.5
+    },
+    {
+      "affine": [0.3, -0.4, 0.2, 0.4, 0.3, 0.4],
+      "variations": { "juliaN": 1.0 },
+      "parameters": { "juliaN": { "n": 5 } },
+      "probability": 0.2,
+      "color": 0.75
+    },
+    {
+      "affine": [-0.7, 0.2, 0.5, -0.2, -0.7, -0.4],
+      "variations": { "linear": 1.0 },
+      "probability": 0.2,
+      "color": 1.0
+    }
+  ]
+}

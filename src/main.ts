@@ -1,7 +1,7 @@
 import './style.css';
 import { renderFlame } from './renderer';
 import type { FlamePreset } from './types';
-import basicPreset from '../presets/palette-showcase.json';
+import basicPreset from '../presets/curl_dream.json';
 
 const app = document.querySelector<HTMLDivElement>('#app');
 if (!app) {

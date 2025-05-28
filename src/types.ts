@@ -18,7 +18,10 @@ export interface FlamePreset {
   height: number;
   functions: FlameFunction[];
   gamma?: number;
+  /** Number of sample iterations to accumulate into the histogram. */
   iterations?: number;
+  /** Optional number of initial iterations to skip (burn-in) before sampling. */
+  burnIn?: number;
   /** Optional palette of hex color strings (e.g., "#ff0000") to use instead of the default rainbow palette */
   palette?: string[];
   /**

@@ -92,7 +92,10 @@ export function renderFlame(
   const data = imageData.data;
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-      let sumR = 0, sumG = 0, sumB = 0, count = 0;
+      let sumR = 0,
+        sumG = 0,
+        sumB = 0,
+        count = 0;
       const baseY = y * scale;
       const baseX = x * scale;
       for (let j = 0; j < scale; j++) {

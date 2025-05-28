@@ -11,13 +11,15 @@ export function applyFlameFunction(
   const y0 = d * x + e * y + f;
   let newX = 0;
   let newY = 0;
+  const paramsMap = fn.parameters ?? {};
   for (const [name, weight] of Object.entries(fn.variations)) {
     if (weight === 0) continue;
     const variationFn = variations[name];
     if (!variationFn) {
       throw new Error(`Unknown variation function: ${name}`);
     }
-    const [vx, vy] = variationFn(x0, y0);
+    const params = paramsMap[name];
+    const [vx, vy] = variationFn(x0, y0, params);
     newX += weight * vx;
     newY += weight * vy;
   }

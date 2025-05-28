@@ -1,0 +1,15 @@
+{
+  "width": 400,
+  "height": 400,
+  "iterations": 200000,
+  "gamma": 1,
+  "functions": [
+    {
+      "affine": [1, 0, 0, 0, 1, 0],
+      "variations": { "curl": 1.0 },
+      "parameters": { "curl": { "a": 0.2, "b": 1.0 } },
+      "probability": 1,
+      "color": 0.5
+    }
+  ]
+}

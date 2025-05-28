@@ -1,174 +1,224 @@
 // variations.ts
 
-export type VariationFunction = (x: number, y: number) => [number, number];
+export type VariationFunction = (
+  x: number,
+  y: number,
+  params?: Record<string, number>
+) => [number, number];
 
 // --- Core Variations ---
 
 export const linear: VariationFunction = (x, y) => [x, y];
 
 export const swirl: VariationFunction = (x, y) => {
-    const r2 = x * x + y * y;
-    return [
-        x * Math.sin(r2) - y * Math.cos(r2),
-        x * Math.cos(r2) + y * Math.sin(r2),
-    ];
+  const r2 = x * x + y * y;
+  return [
+    x * Math.sin(r2) - y * Math.cos(r2),
+    x * Math.cos(r2) + y * Math.sin(r2),
+  ];
 };
 
 export const horseshoe: VariationFunction = (x, y) => {
-    const r = Math.hypot(x, y) || 1;
-    return [((x - y) * (x + y)) / r, (2 * x * y) / r];
+  const r = Math.hypot(x, y) || 1;
+  return [((x - y) * (x + y)) / r, (2 * x * y) / r];
 };
 
 export const sinusoidal: VariationFunction = (x, y) => [
-    Math.sin(x),
-    Math.sin(y),
+  Math.sin(x),
+  Math.sin(y),
 ];
 
 export const spherical: VariationFunction = (x, y) => {
-    const r2 = x * x + y * y || 1e-6;
-    return [x / r2, y / r2];
+  const r2 = x * x + y * y || 1e-6;
+  return [x / r2, y / r2];
 };
 
 export const bubble: VariationFunction = (x, y) => {
-    const r2 = x * x + y * y;
-    return [x / (r2 + 1), y / (r2 + 1)];
+  const r2 = x * x + y * y;
+  return [x / (r2 + 1), y / (r2 + 1)];
 };
 
 export const polar: VariationFunction = (x, y) => {
-    const r = Math.hypot(x, y);
-    const theta = Math.atan2(y, x);
-    return [theta / Math.PI, r - 1];
+  const r = Math.hypot(x, y);
+  const theta = Math.atan2(y, x);
+  return [theta / Math.PI, r - 1];
 };
 
 export const handkerchief: VariationFunction = (x, y) => {
-    const r = Math.hypot(x, y);
-    const theta = Math.atan2(y, x);
-    return [Math.sin(theta + r), Math.cos(theta - r)];
+  const r = Math.hypot(x, y);
+  const theta = Math.atan2(y, x);
+  return [Math.sin(theta + r), Math.cos(theta - r)];
 };
 
 export const heart: VariationFunction = (x, y) => {
-    const r = Math.hypot(x, y);
-    const theta = Math.atan2(y, x);
-    return [r * Math.sin(theta * r), -r * Math.cos(theta * r)];
+  const r = Math.hypot(x, y);
+  const theta = Math.atan2(y, x);
+  return [r * Math.sin(theta * r), -r * Math.cos(theta * r)];
 };
 
 export const disc: VariationFunction = (x, y) => {
-    const r = Math.hypot(x, y);
-    const theta = Math.atan2(y, x);
-    return [
-        (theta / Math.PI) * Math.sin(Math.PI * r),
-        (theta / Math.PI) * Math.cos(Math.PI * r),
-    ];
+  const r = Math.hypot(x, y);
+  const theta = Math.atan2(y, x);
+  return [
+    (theta / Math.PI) * Math.sin(Math.PI * r),
+    (theta / Math.PI) * Math.cos(Math.PI * r),
+  ];
 };
 
 export const rings: VariationFunction = (x, y) => {
-    const r = Math.hypot(x, y);
-    const theta = Math.atan2(y, x);
-    return [Math.sin(r * r), Math.cos(theta)];
+  const r = Math.hypot(x, y);
+  const theta = Math.atan2(y, x);
+  return [Math.sin(r * r), Math.cos(theta)];
 };
 
 export const rings2: VariationFunction = (x, y) => {
-    const r = Math.hypot(x, y) % 1.0;
-    const theta = Math.atan2(y, x);
-    return [r * Math.cos(theta), r * Math.sin(theta)];
+  const r = Math.hypot(x, y) % 1.0;
+  const theta = Math.atan2(y, x);
+  return [r * Math.cos(theta), r * Math.sin(theta)];
 };
 
 export const fan: VariationFunction = (x, y) => {
-    const theta = Math.atan2(y, x);
-    const r = Math.hypot(x, y);
-    const t = theta + Math.PI * (Math.floor(theta / Math.PI) % 2);
-    return [r * Math.sin(t), r * Math.cos(t)];
+  const theta = Math.atan2(y, x);
+  const r = Math.hypot(x, y);
+  const t = theta + Math.PI * (Math.floor(theta / Math.PI) % 2);
+  return [r * Math.sin(t), r * Math.cos(t)];
 };
 
 export const spiral: VariationFunction = (x, y) => {
-    const r = Math.hypot(x, y);
-    const theta = Math.atan2(y, x);
-    return [Math.cos(theta) / r, Math.sin(theta) / r];
+  const r = Math.hypot(x, y);
+  const theta = Math.atan2(y, x);
+  return [Math.cos(theta) / r, Math.sin(theta) / r];
 };
 
 export const diamond: VariationFunction = (x, y) => {
-    const r = Math.hypot(x, y);
-    const theta = Math.atan2(y, x);
-    return [Math.sin(theta) * Math.cos(r), Math.cos(theta) * Math.sin(r)];
+  const r = Math.hypot(x, y);
+  const theta = Math.atan2(y, x);
+  return [Math.sin(theta) * Math.cos(r), Math.cos(theta) * Math.sin(r)];
 };
 
 export const ex: VariationFunction = (x, y) => {
-    const r = Math.hypot(x, y);
-    const theta = Math.atan2(y, x);
-    return [
-        r * Math.pow(Math.sin(theta + r), 3),
-        r * Math.pow(Math.cos(theta - r), 3),
-    ];
+  const r = Math.hypot(x, y);
+  const theta = Math.atan2(y, x);
+  return [
+    r * Math.pow(Math.sin(theta + r), 3),
+    r * Math.pow(Math.cos(theta - r), 3),
+  ];
 };
 
 export const waves: VariationFunction = (x, y) => [
-    x + 0.5 * Math.sin(y / ((y * y) + 1)),
-    y + 0.5 * Math.sin(x / ((x * x) + 1)),
+  x + 0.5 * Math.sin(y / (y * y + 1)),
+  y + 0.5 * Math.sin(x / (x * x + 1)),
 ];
 
 export const fisheye: VariationFunction = (x, y) => {
-    const r = 2 / (Math.hypot(x, y) + 1e-6);
-    return [r * y, r * x];
+  const r = 2 / (Math.hypot(x, y) + 1e-6);
+  return [r * y, r * x];
 };
 
 export const popcorn: VariationFunction = (x, y) => [
-    x + 0.05 * Math.sin(3 * y),
-    y + 0.05 * Math.sin(3 * x),
+  x + 0.05 * Math.sin(3 * y),
+  y + 0.05 * Math.sin(3 * x),
 ];
 
 export const eyefish: VariationFunction = (x, y) => {
-    const r = 2 / (Math.hypot(x, y) + 1e-6);
-    return [r * x, r * y];
+  const r = 2 / (Math.hypot(x, y) + 1e-6);
+  return [r * x, r * y];
 };
 
 export const blade: VariationFunction = (x, y) => {
-    const r = Math.hypot(x, y);
-    const theta = Math.atan2(y, x);
-    return [r * Math.cos(theta), r * Math.sin(2 * theta)];
+  const r = Math.hypot(x, y);
+  const theta = Math.atan2(y, x);
+  return [r * Math.cos(theta), r * Math.sin(2 * theta)];
 };
 
 export const bent: VariationFunction = (x, y) => [
-    x < 0 ? x * 2 : x,
-    y < 0 ? y / 2 : y,
+  x < 0 ? x * 2 : x,
+  y < 0 ? y / 2 : y,
 ];
 
 export const cross: VariationFunction = (x, y) => [
-    x / (x * x - y * y + 1e-6),
-    y / (y * y - x * x + 1e-6),
+  x / (x * x - y * y + 1e-6),
+  y / (y * y - x * x + 1e-6),
 ];
 
 export const cosine: VariationFunction = (x, y) => [
-    Math.cos(Math.PI * x) * Math.cosh(y),
-    -Math.sin(Math.PI * x) * Math.sinh(y),
+  Math.cos(Math.PI * x) * Math.cosh(y),
+  -Math.sin(Math.PI * x) * Math.sinh(y),
 ];
+
+export const curl: VariationFunction = (x, y, params = {}) => {
+  const a = params.a ?? 0.5;
+  const b = params.b ?? 0.5;
+  const r2 = x * x + y * y;
+  const sx = x * Math.sin(r2) - y * Math.cos(r2);
+  const sy = x * Math.cos(r2) + y * Math.sin(r2);
+  return [x + a * sx, y + b * sy];
+};
+
+export const pdj: VariationFunction = (x, y, params = {}) => {
+  const a = params.a ?? 1.0;
+  const b = params.b ?? 0.5;
+  const c = params.c ?? 0.5;
+  const d = params.d ?? 1.0;
+  return [Math.sin(a * y) - Math.cos(b * x), Math.sin(c * x) - Math.cos(d * y)];
+};
+
+export const juliaN: VariationFunction = (x, y, params = {}) => {
+  const n = params.n ?? 4;
+  const power = params.power ?? 1;
+  const theta = Math.atan2(y, x);
+  const r = Math.hypot(x, y) ** power;
+  const angle = theta * n;
+  return [r * Math.cos(angle), r * Math.sin(angle)];
+};
+
+export const fan2: VariationFunction = (x, y, params = {}) => {
+  const freq = params.freq ?? 3.0;
+  const spread = params.spread ?? 0.5;
+  const theta = Math.atan2(y, x);
+  const r = Math.hypot(x, y);
+  const t = theta + spread * Math.sin(freq * theta);
+  return [r * Math.cos(t), r * Math.sin(t)];
+};
+
+export const popcorn2: VariationFunction = (x, y, params = {}) => {
+  const c = params.c ?? 0.3;
+  const f = params.f ?? 3.0;
+  return [x + c * Math.sin(Math.tan(f * y)), y + f * Math.sin(Math.tan(c * x))];
+};
 
 // --- Registry ---
 
 export const variations: Record<string, VariationFunction> = {
-    linear,
-    swirl,
-    horseshoe,
-    sinusoidal,
-    spherical,
-    bubble,
-    polar,
-    handkerchief,
-    heart,
-    disc,
-    rings,
-    rings2,
-    fan,
-    spiral,
-    diamond,
-    ex,
-    waves,
-    fisheye,
-    popcorn,
-    eyefish,
-    blade,
-    bent,
-    cross,
-    cosine,
+  linear,
+  swirl,
+  horseshoe,
+  sinusoidal,
+  spherical,
+  bubble,
+  polar,
+  handkerchief,
+  heart,
+  disc,
+  rings,
+  rings2,
+  fan,
+  spiral,
+  diamond,
+  ex,
+  waves,
+  fisheye,
+  popcorn,
+  eyefish,
+  blade,
+  bent,
+  cross,
+  cosine,
+  curl,
+  pdj,
+  juliaN,
+  fan2,
+  popcorn2,
 };
 
 const assert = (cond: boolean, msg: string): void => {

@@ -46,7 +46,7 @@ Implemented variations include:
 - `swirl`
 - `horseshoe`
 - `sinusoidal`
-  Each variation is a function `(x, y) => [x', y']`
+Each variation is a function `(x, y, params?) => [x', y']`, where `params` is an optional map of numeric parameters for parameterized variations.
 
 #### 4. **Affine Transformations**
 

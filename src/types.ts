@@ -7,6 +7,8 @@ export type AffineMatrix = [number, number, number, number, number, number];
 export interface FlameFunction {
   affine: AffineMatrix;
   variations: VariationMap;
+  /** Optional per-variation numeric parameters */
+  parameters?: Record<string, Record<string, number>>;
   color?: number;
   probability: number;
 }

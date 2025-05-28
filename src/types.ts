@@ -17,4 +17,6 @@ export interface FlamePreset {
   functions: FlameFunction[];
   gamma?: number;
   iterations?: number;
+  /** Optional palette of hex color strings (e.g., "#ff0000") to use instead of the default rainbow palette */
+  palette?: string[];
 }

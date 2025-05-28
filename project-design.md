@@ -109,6 +109,7 @@ flamelet/
 ### 🔄 Future Extensions (Post-MVP)
 
 - Flame coloring using palette interpolation
+- JSON-loadable palettes: define and load palette arrays of hex color strings in JSON presets
 - UI controls to live-tweak flame parameters
 - Export rendered images
 - Dynamic/animated flame rendering

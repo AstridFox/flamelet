@@ -33,9 +33,14 @@ export const spherical: VariationFunction = (x, y) => {
   return [x / r2, y / r2];
 };
 
+/**
+ * Bubble variation: compresses coordinates inward based on radius.
+ * Formula: factor = 4/(r^2 + 4)
+ */
 export const bubble: VariationFunction = (x, y) => {
   const r2 = x * x + y * y;
-  return [x / (r2 + 1), y / (r2 + 1)];
+  const factor = 4 / (r2 + 4);
+  return [x * factor, y * factor];
 };
 
 export const polar: VariationFunction = (x, y) => {
@@ -90,19 +95,23 @@ export const spiral: VariationFunction = (x, y) => {
   return [Math.cos(theta) / r, Math.sin(theta) / r];
 };
 
+/**
+ * Diamond variation: angular twist with radial modulation.
+ */
 export const diamond: VariationFunction = (x, y) => {
   const r = Math.hypot(x, y);
   const theta = Math.atan2(y, x);
-  return [Math.sin(theta) * Math.cos(r), Math.cos(theta) * Math.sin(r)];
+  return [Math.sin(theta) * r, Math.cos(theta) * r];
 };
 
+/**
+ * EX variation: warping explosion effect, breaks radial symmetry.
+ */
 export const ex: VariationFunction = (x, y) => {
-  const r = Math.hypot(x, y);
+  const r = Math.sqrt(x * x + y * y) + 1e-6;
   const theta = Math.atan2(y, x);
-  return [
-    r * Math.pow(Math.sin(theta + r), 3),
-    r * Math.pow(Math.cos(theta - r), 3),
-  ];
+  const factor = Math.sin(theta + r);
+  return [x * factor, y * factor];
 };
 
 export const waves: VariationFunction = (x, y) => [
@@ -120,10 +129,53 @@ export const popcorn: VariationFunction = (x, y) => [
   y + 0.05 * Math.sin(3 * x),
 ];
 
+/**
+ * Eyefish variation: lens-like effect, similar to bubble with vertical pinch.
+ */
 export const eyefish: VariationFunction = (x, y) => {
-  const r = 2 / (Math.hypot(x, y) + 1e-6);
-  return [r * x, r * y];
+  const r2 = x * x + y * y + 1e-6;
+  return [(2 * x) / (r2 + 1), y / (r2 + 1)];
 };
+
+// --- Exotic Variations ---
+
+/**
+ * Blur variation: introduces chaos/randomness in a soft circular pattern.
+ */
+export const blur: VariationFunction = (x, y) => {
+  void x;
+  void y;
+  const theta = Math.random() * 2 * Math.PI;
+  const r = Math.random();
+  return [r * Math.cos(theta), r * Math.sin(theta)];
+};
+
+/**
+ * Hyperbolic variation: nests radial arcs with angular twist.
+ */
+export const hyperbolic: VariationFunction = (x, y) => {
+  const r = Math.sqrt(x * x + y * y);
+  const theta = Math.atan2(y, x);
+  return [Math.sin(theta) / r, Math.cos(theta) * r];
+};
+
+/**
+ * MirrorX variation: reflects point across the vertical axis.
+ */
+export const mirrorx: VariationFunction = (x, y) => [Math.abs(x), y];
+
+/**
+ * MirrorY variation: reflects point across the horizontal axis.
+ */
+export const mirrory: VariationFunction = (x, y) => [x, Math.abs(y)];
+
+/**
+ * Noise variation: adds subtle randomness to coordinates.
+ */
+export const noise: VariationFunction = (x, y) => [
+  x + (Math.random() - 0.5) * 0.01,
+  y + (Math.random() - 0.5) * 0.01,
+];
 
 export const blade: VariationFunction = (x, y) => {
   const r = Math.hypot(x, y);
@@ -219,6 +271,11 @@ export const variations: Record<string, VariationFunction> = {
   juliaN,
   fan2,
   popcorn2,
+  blur,
+  hyperbolic,
+  mirrorx,
+  mirrory,
+  noise,
 };
 
 const assert = (cond: boolean, msg: string): void => {

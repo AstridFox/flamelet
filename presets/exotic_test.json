@@ -1,0 +1,28 @@
+{
+  "width": 400,
+  "height": 400,
+  "iterations": 200000,
+  "gamma": 1,
+  "functions": [
+    {
+      "affine": [1, 0, 0, 0, 1, 0],
+      "variations": { "bubble": 1 },
+      "probability": 0.25
+    },
+    {
+      "affine": [1, 0, 0, 0, 1, 0],
+      "variations": { "diamond": 1 },
+      "probability": 0.25
+    },
+    {
+      "affine": [1, 0, 0, 0, 1, 0],
+      "variations": { "blur": 1 },
+      "probability": 0.25
+    },
+    {
+      "affine": [1, 0, 0, 0, 1, 0],
+      "variations": { "hyperbolic": 1 },
+      "probability": 0.25
+    }
+  ]
+}

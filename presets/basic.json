@@ -1,0 +1,23 @@
+{
+  "width": 400,
+  "height": 400,
+  "iterations": 50000,
+  "gamma": 1,
+  "functions": [
+    {
+      "affine": [0.5, 0, 0, 0, 0.5, 0],
+      "variations": { "linear": 1 },
+      "probability": 0.34
+    },
+    {
+      "affine": [1, 0, 0, 0, 1, 0],
+      "variations": { "swirl": 1 },
+      "probability": 0.33
+    },
+    {
+      "affine": [1, 0, 0, 0, 1, 0],
+      "variations": { "horseshoe": 1 },
+      "probability": 0.33
+    }
+  ]
+}

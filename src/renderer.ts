@@ -3,8 +3,8 @@ import { applyFlameFunction } from './flame';
 import { palette, createPaletteFromArray } from './palette';
 
 /**
- * Render a fractal flame onto a 2D canvas using histogram accumulation,
- * log-density normalization, and gamma correction.
+ * Render a fractal flame onto a 2D canvas using HDR color accumulation,
+ * tone mapping, gamma correction, and optional supersampling.
  */
 export function renderFlame(
   preset: FlamePreset,
@@ -13,6 +13,7 @@ export function renderFlame(
   const {
     width,
     height,
+    supersample = 1,
     functions,
     iterations = 100000,
     gamma = 1,
@@ -68,45 +69,55 @@ export function renderFlame(
   const rangeX = maxX - minX || 1;
   const rangeY = maxY - minY || 1;
 
-  const histogram = new Uint32Array(width * height);
-  const colorBuffer = new Float32Array(width * height * 3);
-  for (let i = 0; i < xs.length; i++) {
-    const px = Math.floor(((xs[i] - minX) / rangeX) * (width - 1));
-    const py = Math.floor((1 - (ys[i] - minY) / rangeY) * (height - 1));
-    if (px >= 0 && px < width && py >= 0 && py < height) {
-      const idx = py * width + px;
-      histogram[idx]++;
-      const col = funcColors[idxs[i]];
+  const scale = Math.max(1, Math.floor(supersample));
+  const highWidth = width * scale;
+  const highHeight = height * scale;
+  const histogramHS = new Uint32Array(highWidth * highHeight);
+  const colorBufferHS = new Float32Array(highWidth * highHeight * 3);
+  for (let i = 0, n = xs.length; i < n; i++) {
+    const px = Math.floor(((xs[i] - minX) / rangeX) * (highWidth - 1));
+    const py = Math.floor((1 - (ys[i] - minY) / rangeY) * (highHeight - 1));
+    if (px >= 0 && px < highWidth && py >= 0 && py < highHeight) {
+      const idx = py * highWidth + px;
+      histogramHS[idx]++;
       const bufOff = idx * 3;
-      colorBuffer[bufOff] += col[0];
-      colorBuffer[bufOff + 1] += col[1];
-      colorBuffer[bufOff + 2] += col[2];
+      const col = funcColors[idxs[i]];
+      colorBufferHS[bufOff] += col[0];
+      colorBufferHS[bufOff + 1] += col[1];
+      colorBufferHS[bufOff + 2] += col[2];
     }
   }
-
-  let maxCount = 0;
-  for (const count of histogram) {
-    if (count > maxCount) {
-      maxCount = count;
-    }
-  }
-  const logMax = Math.log(maxCount + 1);
 
   const imageData = ctx.createImageData(width, height);
   const data = imageData.data;
-  for (let i = 0; i < histogram.length; i++) {
-    const count = histogram[i];
-    if (count > 0) {
-      const intensity = Math.pow(Math.log(count + 1) / logMax, 1 / gamma);
-      const off = i * 4;
-      const bufOff = i * 3;
-      const rAvg = colorBuffer[bufOff] / count;
-      const gAvg = colorBuffer[bufOff + 1] / count;
-      const bAvg = colorBuffer[bufOff + 2] / count;
-      data[off] = Math.floor(rAvg * intensity * 255);
-      data[off + 1] = Math.floor(gAvg * intensity * 255);
-      data[off + 2] = Math.floor(bAvg * intensity * 255);
-      data[off + 3] = 255;
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      let sumR = 0, sumG = 0, sumB = 0, count = 0;
+      const baseY = y * scale;
+      const baseX = x * scale;
+      for (let j = 0; j < scale; j++) {
+        for (let i = 0; i < scale; i++) {
+          const idxHS = (baseY + j) * highWidth + (baseX + i);
+          sumR += colorBufferHS[idxHS * 3];
+          sumG += colorBufferHS[idxHS * 3 + 1];
+          sumB += colorBufferHS[idxHS * 3 + 2];
+          count += histogramHS[idxHS];
+        }
+      }
+      const off = (y * width + x) * 4;
+      if (count > 0) {
+        const inv = 1 / (scale * scale);
+        const hdrR = sumR * inv;
+        const hdrG = sumG * inv;
+        const hdrB = sumB * inv;
+        const mappedR = hdrR / (1 + hdrR);
+        const mappedG = hdrG / (1 + hdrG);
+        const mappedB = hdrB / (1 + hdrB);
+        data[off] = Math.floor(Math.pow(mappedR, 1 / gamma) * 255);
+        data[off + 1] = Math.floor(Math.pow(mappedG, 1 / gamma) * 255);
+        data[off + 2] = Math.floor(Math.pow(mappedB, 1 / gamma) * 255);
+        data[off + 3] = 255;
+      }
     }
   }
   ctx.putImageData(imageData, 0, 0);

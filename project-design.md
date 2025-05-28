@@ -114,6 +114,8 @@ flamelet/
 - Export rendered images
 - Dynamic/animated flame rendering
 - WebGL support for speed
+- HDR color buffer and tone mapping (float-based accumulation, Reinhard/log/exposure strategies)
+- Supersampling with downscale for smoother, high-detail output
 - Flamelet VJ mode for real-time visuals
 
 ---

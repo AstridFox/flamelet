@@ -19,4 +19,8 @@ export interface FlamePreset {
   iterations?: number;
   /** Optional palette of hex color strings (e.g., "#ff0000") to use instead of the default rainbow palette */
   palette?: string[];
+  /**
+   * Optional supersampling factor; internally render at width*supersample x height*supersample then downscale for antialiasing.
+   */
+  supersample?: number;
 }

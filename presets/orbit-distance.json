@@ -1,11 +1,11 @@
 {
-  "width": 600,
-  "height": 600,
-  "supersample": 2,
-  "iterations": 100000,
+  "width": 650,
+  "height": 650,
+  "supersample": 4,
+  "iterations": 500000,
   "gamma": 2.2,
   "coloring": {
-    "mode": "orbit-distance"
+    "mode": "orbit-angle"
   },
   "functions": [
     {

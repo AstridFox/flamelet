@@ -19,7 +19,7 @@
 
 ## ✨ Features
 
-- 🌈 **Colorful Fractal Flames** – Palette-driven coloring with customizable gamma correction.
+- 🌈 **Colorful Fractal Flames** – Palette-driven coloring with customizable gamma correction and pluggable coloring strategies (histogram, orbit-distance, orbit-angle).
 - 🔄 **Rich Variation Functions** – Includes a wide range of classic and exotic IFS variations (linear, swirl, horseshoe, sinusoidal, spherical, bubble, polar, handkerchief, heart, disc, rings, rings2, fan, spiral, diamond, ex, waves, fisheye, popcorn, eyefish, blade, bent, cross, cosine, curl, pdj, juliaN, fan2, popcorn2, blur, hyperbolic, mirrorx, mirrory, noise, mandelbrotWarp, juliaWarp, burningShipWarp) for stunning visual complexity.
 - 🔥 **Burn-In & Density Control** – Optional initial skip to reach the attractor, plus log-density normalization for smooth gradients.
 - ⚡ **High Performance** – Optimized in TypeScript with efficient sampling, runs entirely in the browser canvas.
@@ -75,13 +75,13 @@ Key configuration fields:
 | ------------------------ | ---------------------------------------------------------------- |
 | `width`                  | Canvas width in pixels                                           |
 | `height`                 | Canvas height in pixels                                          |
-| `supersample`            | Optional supersampling factor (antialiasing)                     |
-| `iterations`             | Number of sampling iterations                                    |
-| `burnIn`                 | Initial iterations to skip before sampling                       |
-| `gamma`                  | Gamma correction factor                                          |
-| `palette`                | Array of hex color strings for palette shading                   |
-| `coloring.mode`          | Coloring strategy to use (`histogram`, `orbit-distance`, etc.)   |
-| `coloring.distanceScale` | (orbit-distance only) Distance scale for distance-based coloring |
+| `supersample`            | Optional supersampling factor (antialiasing), default **1**       |
+| `iterations`             | Optional number of sampling iterations, default **100000**       |
+| `burnIn`                 | Optional initial iterations to skip before sampling, default **20** |
+| `gamma`                  | Optional gamma correction factor, default **1**                  |
+| `palette`                | Optional array of hex color strings for palette shading (default rainbow HSV palette) |
+| `coloring.mode`          | Optional coloring strategy to use (`histogram`, `orbit-distance`, `orbit-angle`, etc.), default **histogram** |
+| `coloring.distanceScale` | Optional (orbit-distance only) distance scale for distance-based coloring |
 | `functions`              | Array of FlameFunction objects (see structure below)             |
 
 Key FlameFunction fields:
@@ -90,9 +90,9 @@ Key FlameFunction fields:
 | ------------- | ----------------------------------------------------------------------------- |
 | `affine`      | 6-number array `[a, b, c, d, e, f]` for affine transform                      |
 | `variations`  | Map of variation names to weights                                             |
-| `parameters`  | Optional per-variation numeric parameters                                     |
+| `parameters`  | Optional per-variation numeric parameters (default `{}`)                       |
 | `probability` | Selection weight for randomly choosing this function in the IFS sampling loop |
-| `color`       | Optional normalized palette index (0.0–1.0) for color mapping                 |
+| `color`       | Optional normalized palette index (0.0–1.0) for color mapping (default auto-indexed across functions) |
 
 See [project-design.md](project-design.md) for full details on the preset format.
 

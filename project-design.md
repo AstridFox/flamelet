@@ -14,7 +14,7 @@ This MVP aims to produce static color flame renders with JSON-based preset suppo
 
 - **Language:** TypeScript
 - **Bundler & Dev Server:** Vite
-- **Package Manager:** Yarn
+- **Package Manager:** Yarn (or npm)
 - **Version Control:** Git
 - **Linting:** ESLint
 - **Code Formatting:** Prettier
@@ -37,6 +37,7 @@ interface FlamePreset {
   burnIn?: number;
   gamma?: number;
   palette?: string[];
+  coloring?: { mode?: string; distanceScale?: number };
   functions: FlameFunction[];
 }
 
@@ -84,7 +85,7 @@ Each variation is a function `(x, y, params?) => [x', y']`, where `params` is an
 - Applies log-density normalization
 - Renders to `<canvas>` using palette-based color shading with gamma correction
 
-#### **Modular Coloring Strategy Architecture**
+##### **Modular Coloring Strategy Architecture**
 
 To enable flexible, pluggable coloring approaches, the renderer delegates all color accumulation and output logic to a modular strategy. Strategies manage their own state and buffers, and the renderer invokes them uniformly without branching on specific modes.
 
@@ -123,23 +124,6 @@ strategy.finalize(outputBuffer)
 drawToCanvas(outputBuffer)
 ```
 
-🧠 **Step 1: Move Histogram Logic into Strategy**
-
-Encapsulate the current histogram-based color accumulation into its own `histogram` strategy module:
-
-- Maintain the hit-count histogram and per-pixel RGB float buffers internally
-- Apply gamma, log-density normalization, and palette-based coloring entirely inside the strategy
-- Register via `registerStrategy('histogram', ...)`
-
-🌌 **Step 2: Add 'orbit-distance' Strategy**
-
-Implement an `orbit-distance` strategy that:
-
-- Tracks each sample's distance from the origin and normalizes by a scale parameter
-- Computes palette index `t = distance / scale` per sample
-- Accumulates and downsamples RGB float buffers similarly to the histogram strategy
-- Registers via `registerStrategy('orbit-distance', ...)`
-
 #### 6. **Preset Loader**
 
 - Imports JSON flame preset from `presets/`
@@ -155,7 +139,7 @@ Implement an `orbit-distance` strategy that:
 ### 🧪 Development Best Practices
 
 - Use strict typing throughout
-- Run `yarn lint` and `yarn prettier` before each commit
+- Run `yarn lint` and `yarn format` before each commit
 - Ignore generated files (`node_modules`, `dist`, etc.) in all relevant ignore files
 - Use functional decomposition for clarity and testability
 

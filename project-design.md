@@ -116,9 +116,3 @@ Each variation is a function `(x, y, params?) => [x', y']`, where `params` is an
 - HDR color buffer and tone mapping (float-based accumulation, Reinhard/log/exposure strategies)
 - Supersampling with downscale for smoother, high-detail output
 - Flamelet VJ mode for real-time visuals
-
----
-
-This design doc serves as a blueprint for implementing the MVP described in the prompt sequence. Each prompt builds incrementally toward this complete system.
-
-Let me know if you want this version pushed to the README too, or want to add roadmap tags like `[0.1.0]`! 🌟

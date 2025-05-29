@@ -23,6 +23,10 @@ export interface StrategyOptions {
   paletteDef?: string[];
   gamma: number;
   distanceScale?: number;
+  /** Number of samples to accumulate into an orbit before flushing (used by orbit-based strategies). */
+  orbitLength?: number;
+  /** Scale factor for normalizing angular momentum L to t ∈ [0,1] (used by angular-momentum strategy). */
+  momentumScale?: number;
 }
 
 /**

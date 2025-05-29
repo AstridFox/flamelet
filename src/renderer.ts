@@ -46,6 +46,8 @@ export function renderFlame(
     paletteDef,
     gamma,
     distanceScale: preset.coloring?.distanceScale,
+    orbitLength: preset.coloring?.orbitLength,
+    momentumScale: preset.coloring?.momentumScale,
   });
 
   let x = Math.random() * 2 - 1;

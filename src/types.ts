@@ -37,4 +37,8 @@ export interface ColoringOptions {
   mode?: string;
   /** Strategy-specific options for coloring (e.g., distanceScale for orbit-distance). */
   distanceScale?: number;
+  /** For orbit-based strategies: number of samples to accumulate before flushing. */
+  orbitLength?: number;
+  /** For angular-momentum strategy: scale to normalize total angular momentum to [0,1]. */
+  momentumScale?: number;
 }

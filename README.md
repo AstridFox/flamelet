@@ -128,6 +128,18 @@ const strategy = factory.create({
   gamma: 1,
   distanceScale: 1,
 });
+// Example: angular-momentum strategy (momentumScale auto-detected if omitted)
+const amFactory = getStrategyFactory('angular-momentum');
+const amStrategy = amFactory.create({
+  width: 800,
+  height: 600,
+  supersample: 2,
+  functions: flameFunctions,
+  paletteDef: ['#fff', '#000'],
+  gamma: 1,
+  orbitLength: 32,
+  // momentumScale: 10, // optional override (auto-detected otherwise)
+});
 ```
 
 ---

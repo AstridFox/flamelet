@@ -131,6 +131,21 @@ registerPalette(name: string, fn: (t: number) => [r, g, b])
 getPalette(nameOrArray?: string | string[]): (t: number) => [r, g, b]
 ````
 
+##### **Angular Momentum Strategy (Pseudocode)**
+
+```text
+getT(orbit):
+  let total = 0
+  for i from 1 to orbit.xs.length - 1:
+    dx = orbit.xs[i] - orbit.xs[i-1]
+    dy = orbit.ys[i] - orbit.ys[i-1]
+    total += dx * orbit.ys[i] - dy * orbit.xs[i]
+  # auto-detect scale if omitted: maximum |total| across all orbits
+  scale = options.momentumScale ?? max(abs(total) for each orbit in orbitTotals)
+  t = clamp(abs(total) / scale, 0, 1)
+  return t
+```
+
 #### Strategy Factories and Structure
 
 The strategies are now implemented in a modular, layered structure:

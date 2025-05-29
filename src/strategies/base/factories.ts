@@ -61,28 +61,62 @@ export function sampleFactory(
 }
 
 /**
- * Factory for orbit-based strategies.
- * Applies getT on each orbit sample to compute a palette index t.
+ * Factory for true orbit-based coloring strategies.
+ * Accumulates sample points into orbits, applies getT to compute a single palette index t,
+ * and applies that color to every sample in the orbit.
  */
 export function orbitFactory(getT: (orbit: Orbit) => number): StrategyFactory {
   return {
     create(options: StrategyOptions) {
       const paletteFn = getPalette(options.paletteDef);
       const context = new StrategyContext(options);
+      const orbitLength = options.orbitLength ?? 20;
+
+      const orbits: Orbit[] = [];
+      let current: Orbit = { xs: [], ys: [], t: 0 };
+
       const strategy: ColoringStrategy = {
         requiresOrbits: true,
+
         accumulate(sample: Sample) {
-          const t = Math.min(Math.max(getT(sample as Orbit), 0), 1);
-          const color = paletteFn(t);
-          context.commitSample(sample.x, sample.y, color);
+          current.xs.push(sample.x);
+          current.ys.push(sample.y);
+
+          if (current.xs.length >= orbitLength) {
+            flushOrbit();
+          }
         },
+
         finalize(outputBuffer: Uint8ClampedArray) {
+          if (current.xs.length > 0) {
+            flushOrbit();
+          }
+
+          for (const orbit of orbits) {
+            const color = paletteFn(clamp(orbit.t, 0, 1));
+            for (let i = 0; i < orbit.xs.length; i++) {
+              context.commitSample(orbit.xs[i], orbit.ys[i], color);
+            }
+          }
+
           context.finalize(outputBuffer);
         },
       };
+
+      function flushOrbit() {
+        const rawT = getT(current);
+        current.t = clamp(rawT, 0, 1);
+        orbits.push(current);
+        current = { xs: [], ys: [], t: 0 };
+      }
+
       return strategy;
     },
   };
+}
+
+function clamp(t: number, min = 0, max = 1): number {
+  return Math.max(min, Math.min(max, t));
 }
 
 /**

@@ -4,28 +4,58 @@
   "supersample": 4,
   "iterations": 500000,
   "gamma": 2.2,
+  "palette": [
+    "#ff0000",
+    "#ff7f00",
+    "#ffff00",
+    "#00ff00",
+    "#00ffff",
+    "#0000ff",
+    "#8b00ff",
+    "#ff00ff",
+    "#ffffff",
+    "#00ffcc",
+    "#ccff00",
+    "#ffcc00",
+    "#cc00ff",
+    "#0099ff",
+    "#ff0066",
+    "#00ff99"
+  ],
   "coloring": {
-    "mode": "orbit-distance"
+    "mode": "angular-momentum",
+    "orbitLength": 10
   },
   "functions": [
     {
       "affine": [0.6, -0.4, 0.2, 0.4, 0.6, -0.3],
-      "variations": { "swirl": 0.7, "linear": 0.3 },
+      "variations": {
+        "swirl": 0.7,
+        "linear": 0.3
+      },
       "probability": 0.25
     },
     {
       "affine": [0.4, 0.1, -0.5, -0.1, 0.4, 0.2],
-      "variations": { "horseshoe": 1 },
+      "variations": {
+        "horseshoe": 1
+      },
       "probability": 0.25
     },
     {
       "affine": [0.3, 0.3, 0, -0.3, 0.3, 0.5],
-      "variations": { "sinusoidal": 0.6, "linear": 0.4 },
+      "variations": {
+        "sinusoidal": 0.6,
+        "linear": 0.4
+      },
       "probability": 0.25
     },
     {
       "affine": [0.5, 0.5, -0.25, -0.5, 0.5, -0.25],
-      "variations": { "linear": 0.5, "swirl": 0.5 },
+      "variations": {
+        "linear": 0.5,
+        "swirl": 0.5
+      },
       "probability": 0.25
     }
   ]

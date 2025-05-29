@@ -2,7 +2,7 @@
   "width": 650,
   "height": 650,
   "supersample": 4,
-  "iterations": 500000,
+  "iterations": 1000000,
   "gamma": 2.2,
   "palette": [
     "#ff0000",
@@ -23,8 +23,8 @@
     "#00ff99"
   ],
   "coloring": {
-    "mode": "angular-momentum",
-    "orbitLength": 10
+    "mode": "radial-flux",
+    "orbitLength": 2
   },
   "functions": [
     {

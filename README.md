@@ -4,7 +4,6 @@
 
 ---
 
-
 ## 📚 Table of Contents
 
 - [Features](#features)
@@ -21,7 +20,7 @@
 ## ✨ Features
 
 - 🌈 **Colorful Fractal Flames** – Palette-driven coloring with customizable gamma correction.
-- 🔄 **Rich Variation Functions** – Includes a wide range of classic and exotic IFS variations (linear, swirl, horseshoe, sinusoidal, spherical, bubble, polar, handkerchief, heart, disc, rings, rings2, fan, spiral, diamond, ex, waves, fisheye, popcorn, eyefish, blade, bent, cross, cosine, curl, pdj, juliaN, fan2, popcorn2, blur, hyperbolic, mirrorx, mirrory, noise) for stunning visual complexity.
+- 🔄 **Rich Variation Functions** – Includes a wide range of classic and exotic IFS variations (linear, swirl, horseshoe, sinusoidal, spherical, bubble, polar, handkerchief, heart, disc, rings, rings2, fan, spiral, diamond, ex, waves, fisheye, popcorn, eyefish, blade, bent, cross, cosine, curl, pdj, juliaN, fan2, popcorn2, blur, hyperbolic, mirrorx, mirrory, noise, mandelbrotWarp, juliaWarp, burningShipWarp) for stunning visual complexity.
 - 🔥 **Burn-In & Density Control** – Optional initial skip to reach the attractor, plus log-density normalization for smooth gradients.
 - ⚡ **High Performance** – Optimized in TypeScript with efficient sampling, runs entirely in the browser canvas.
 - 🔧 **JSON Presets** – Define, share, and reuse flame configurations via easy-to-edit JSON files.
@@ -72,31 +71,30 @@ Flame presets are defined as JSON files in the `presets/` directory. See `preset
 
 Key configuration fields:
 
-| Field         | Description                                           |
-| ------------- | ----------------------------------------------------- |
-| `width`       | Canvas width in pixels                                |
-| `height`      | Canvas height in pixels                               |
-| `supersample` | Optional supersampling factor (antialiasing)          |
-| `iterations`  | Number of sampling iterations                         |
-| `burnIn`      | Initial iterations to skip before sampling            |
-| `gamma`       | Gamma correction factor                               |
-| `palette`     | Array of hex color strings for palette shading        |
-| `functions`   | Array of FlameFunction objects (see structure below)  |
+| Field         | Description                                          |
+| ------------- | ---------------------------------------------------- |
+| `width`       | Canvas width in pixels                               |
+| `height`      | Canvas height in pixels                              |
+| `supersample` | Optional supersampling factor (antialiasing)         |
+| `iterations`  | Number of sampling iterations                        |
+| `burnIn`      | Initial iterations to skip before sampling           |
+| `gamma`       | Gamma correction factor                              |
+| `palette`     | Array of hex color strings for palette shading       |
+| `functions`   | Array of FlameFunction objects (see structure below) |
 
 Key FlameFunction fields:
 
-| Field        | Description                                                                 |
-| ------------ | --------------------------------------------------------------------------- |
-| `affine`     | 6-number array `[a, b, c, d, e, f]` for affine transform                    |
-| `variations` | Map of variation names to weights                                           |
-| `parameters` | Optional per-variation numeric parameters                                   |
-| `probability`| Selection weight for randomly choosing this function in the IFS sampling loop |
-| `color`      | Optional normalized palette index (0.0–1.0) for color mapping                |
+| Field         | Description                                                                   |
+| ------------- | ----------------------------------------------------------------------------- |
+| `affine`      | 6-number array `[a, b, c, d, e, f]` for affine transform                      |
+| `variations`  | Map of variation names to weights                                             |
+| `parameters`  | Optional per-variation numeric parameters                                     |
+| `probability` | Selection weight for randomly choosing this function in the IFS sampling loop |
+| `color`       | Optional normalized palette index (0.0–1.0) for color mapping                 |
 
 See [project-design.md](project-design.md) for full details on the preset format.
 
 ---
-
 
 ## 🛠️ Contributing
 

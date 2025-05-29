@@ -239,6 +239,83 @@ export const popcorn2: VariationFunction = (x, y, params = {}) => {
   return [x + c * Math.sin(Math.tan(f * y)), y + f * Math.sin(Math.tan(c * x))];
 };
 
+// --- Fractal Warp Variations ---
+
+/**
+ * Mandelbrot warp: escape-time fractal warp using Mandelbrot iteration.
+ * zₙ₊₁ = zₙ² + c, where z₀ = (x, y) and c = (x, y).
+ * Parameters:
+ *   - iterations: max iterations (default 15)
+ *   - escapeRadius: bail-out radius (default 2)
+ */
+export const mandelbrotWarp: VariationFunction = (x, y, params = {}) => {
+  const iterations = params.iterations ?? 15;
+  const escapeRadius = params.escapeRadius ?? 2;
+  let zx = x;
+  let zy = y;
+  const cx = x;
+  const cy = y;
+  for (let i = 0; i < iterations; i++) {
+    const x2 = zx * zx - zy * zy + cx;
+    const y2 = 2 * zx * zy + cy;
+    zx = x2;
+    zy = y2;
+    if (zx * zx + zy * zy > escapeRadius * escapeRadius) break;
+  }
+  return [zx, zy];
+};
+
+/**
+ * Julia warp: escape-time fractal warp using Julia set iteration.
+ * zₙ₊₁ = zₙ² + c, where z₀ = (x, y) and c = (cx, cy).
+ * Parameters:
+ *   - cx, cy: constant c components (default -0.4, 0.6)
+ *   - iterations: max iterations (default 15)
+ *   - escapeRadius: bail-out radius (default 2)
+ */
+export const juliaWarp: VariationFunction = (x, y, params = {}) => {
+  const iterations = params.iterations ?? 15;
+  const escapeRadius = params.escapeRadius ?? 2;
+  const cx = params.cx ?? -0.4;
+  const cy = params.cy ?? 0.6;
+  let zx = x;
+  let zy = y;
+  for (let i = 0; i < iterations; i++) {
+    const x2 = zx * zx - zy * zy + cx;
+    const y2 = 2 * zx * zy + cy;
+    zx = x2;
+    zy = y2;
+    if (zx * zx + zy * zy > escapeRadius * escapeRadius) break;
+  }
+  return [zx, zy];
+};
+
+/**
+ * Burning ship warp: escape-time fractal warp using burning ship iteration.
+ * zₙ₊₁ = (|Re(zₙ)| + i·|Im(zₙ)|)² + c, where z₀ = (x, y) and c = (x, y).
+ * Parameters:
+ *   - iterations: max iterations (default 15)
+ *   - escapeRadius: bail-out radius (default 2)
+ */
+export const burningShipWarp: VariationFunction = (x, y, params = {}) => {
+  const iterations = params.iterations ?? 15;
+  const escapeRadius = params.escapeRadius ?? 2;
+  let zx = x;
+  let zy = y;
+  const cx = x;
+  const cy = y;
+  for (let i = 0; i < iterations; i++) {
+    const absX = Math.abs(zx);
+    const absY = Math.abs(zy);
+    const x2 = absX * absX - absY * absY + cx;
+    const y2 = 2 * absX * absY + cy;
+    zx = x2;
+    zy = y2;
+    if (zx * zx + zy * zy > escapeRadius * escapeRadius) break;
+  }
+  return [zx, zy];
+};
+
 // --- Registry ---
 
 export const variations: Record<string, VariationFunction> = {
@@ -271,6 +348,9 @@ export const variations: Record<string, VariationFunction> = {
   juliaN,
   fan2,
   popcorn2,
+  mandelbrotWarp,
+  juliaWarp,
+  burningShipWarp,
   blur,
   hyperbolic,
   mirrorx,

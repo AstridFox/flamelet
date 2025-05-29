@@ -55,19 +55,19 @@ See `src/types.ts` for the full TypeScript definitions.
 
 A `FlameFunction` is an element of the `functions` array in a preset, describing one step of the iterated function system. Each function includes:
 
-| Field        | Description                                                                 |
-| ------------ | --------------------------------------------------------------------------- |
-| `affine`     | 6-number array `[a, b, c, d, e, f]` for affine transform                    |
-| `variations` | Map of variation names (from `src/variations.ts`) to weights                |
-| `parameters` | Optional per-variation numeric parameters                                   |
-| `probability`| Selection weight for randomly choosing this function in the IFS sampling loop |
-| `color`      | Optional normalized palette index (0.0–1.0) for color mapping                |
+| Field         | Description                                                                   |
+| ------------- | ----------------------------------------------------------------------------- |
+| `affine`      | 6-number array `[a, b, c, d, e, f]` for affine transform                      |
+| `variations`  | Map of variation names (from `src/variations.ts`) to weights                  |
+| `parameters`  | Optional per-variation numeric parameters                                     |
+| `probability` | Selection weight for randomly choosing this function in the IFS sampling loop |
+| `color`       | Optional normalized palette index (0.0–1.0) for color mapping                 |
 
 #### 3. **Variation Functions**
 
 All supported variation functions are exported from `src/variations.ts` and registered under their function name. The complete list is:
 
-- `linear`, `swirl`, `horseshoe`, `sinusoidal`, `spherical`, `bubble`, `polar`, `handkerchief`, `heart`, `disc`, `rings`, `rings2`, `fan`, `spiral`, `diamond`, `ex`, `waves`, `fisheye`, `popcorn`, `eyefish`, `blade`, `bent`, `cross`, `cosine`, `curl`, `pdj`, `juliaN`, `fan2`, `popcorn2`, `blur`, `hyperbolic`, `mirrorx`, `mirrory`, `noise`
+- `linear`, `swirl`, `horseshoe`, `sinusoidal`, `spherical`, `bubble`, `polar`, `handkerchief`, `heart`, `disc`, `rings`, `rings2`, `fan`, `spiral`, `diamond`, `ex`, `waves`, `fisheye`, `popcorn`, `eyefish`, `blade`, `bent`, `cross`, `cosine`, `curl`, `pdj`, `juliaN`, `fan2`, `popcorn2`, `blur`, `hyperbolic`, `mirrorx`, `mirrory`, `noise`, `mandelbrotWarp`, `juliaWarp`, `burningShipWarp`
 
 Each variation is a function `(x, y, params?) => [x', y']`, where `params` is an optional numeric parameter map for parameterized variations (e.g. `curl`, `pdj`, `juliaN`, `fan2`, `popcorn2`).
 

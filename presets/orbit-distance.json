@@ -3,27 +3,10 @@
   "height": 650,
   "supersample": 4,
   "iterations": 1000000,
-  "gamma": 2.2,
-  "palette": [
-    "#ff0000",
-    "#ff7f00",
-    "#ffff00",
-    "#00ff00",
-    "#00ffff",
-    "#0000ff",
-    "#8b00ff",
-    "#ff00ff",
-    "#ffffff",
-    "#00ffcc",
-    "#ccff00",
-    "#ffcc00",
-    "#cc00ff",
-    "#0099ff",
-    "#ff0066",
-    "#00ff99"
-  ],
+  "gamma": 1,
+  "palette": "rgb",
   "coloring": {
-    "mode": "radial-flux",
+    "mode": "orbit-angle",
     "orbitLength": 2
   },
   "functions": [

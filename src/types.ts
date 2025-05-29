@@ -28,4 +28,13 @@ export interface FlamePreset {
    * Optional supersampling factor; internally render at width*supersample x height*supersample then downscale for antialiasing.
    */
   supersample?: number;
+  /** Optional coloring strategy options */
+  coloring?: ColoringOptions;
+}
+
+export interface ColoringOptions {
+  /** The coloring strategy to use: 'histogram', 'orbit-distance', etc. */
+  mode?: string;
+  /** Strategy-specific options for coloring (e.g., distanceScale for orbit-distance). */
+  distanceScale?: number;
 }

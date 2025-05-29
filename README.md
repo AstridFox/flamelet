@@ -71,16 +71,18 @@ Flame presets are defined as JSON files in the `presets/` directory. See `preset
 
 Key configuration fields:
 
-| Field         | Description                                          |
-| ------------- | ---------------------------------------------------- |
-| `width`       | Canvas width in pixels                               |
-| `height`      | Canvas height in pixels                              |
-| `supersample` | Optional supersampling factor (antialiasing)         |
-| `iterations`  | Number of sampling iterations                        |
-| `burnIn`      | Initial iterations to skip before sampling           |
-| `gamma`       | Gamma correction factor                              |
-| `palette`     | Array of hex color strings for palette shading       |
-| `functions`   | Array of FlameFunction objects (see structure below) |
+| Field                    | Description                                                      |
+| ------------------------ | ---------------------------------------------------------------- |
+| `width`                  | Canvas width in pixels                                           |
+| `height`                 | Canvas height in pixels                                          |
+| `supersample`            | Optional supersampling factor (antialiasing)                     |
+| `iterations`             | Number of sampling iterations                                    |
+| `burnIn`                 | Initial iterations to skip before sampling                       |
+| `gamma`                  | Gamma correction factor                                          |
+| `palette`                | Array of hex color strings for palette shading                   |
+| `coloring.mode`          | Coloring strategy to use (`histogram`, `orbit-distance`, etc.)   |
+| `coloring.distanceScale` | (orbit-distance only) Distance scale for distance-based coloring |
+| `functions`              | Array of FlameFunction objects (see structure below)             |
 
 Key FlameFunction fields:
 

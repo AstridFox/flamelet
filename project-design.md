@@ -84,6 +84,62 @@ Each variation is a function `(x, y, params?) => [x', y']`, where `params` is an
 - Applies log-density normalization
 - Renders to `<canvas>` using palette-based color shading with gamma correction
 
+#### **Modular Coloring Strategy Architecture**
+
+To enable flexible, pluggable coloring approaches, the renderer delegates all color accumulation and output logic to a modular strategy. Strategies manage their own state and buffers, and the renderer invokes them uniformly without branching on specific modes.
+
+📦 **Strategy Interface (Pseudocode)**
+
+```text
+class ColoringStrategy {
+  method accumulate(sample):
+    # sample includes x, y, function index, and orbit step
+
+  method finalize(outputBuffer):
+    # Write final RGBA values into the output buffer
+}
+
+class StrategyFactory {
+  method create(options) -> ColoringStrategy:
+    # Options include canvas size, palette, gamma, function colors, etc.
+}
+
+// Registry for dynamic strategy lookup:
+registerStrategy(name, factory)
+getStrategyFactory(name) -> factory
+```
+
+🔁 **Render Loop (Pseudocode)**
+
+```text
+strategyFactory = getStrategyFactory(preset.coloring.mode or 'histogram')
+strategy = strategyFactory.create(options)
+
+for orbit in orbits:
+  for sample in orbit:
+    strategy.accumulate(sample)
+
+strategy.finalize(outputBuffer)
+drawToCanvas(outputBuffer)
+```
+
+🧠 **Step 1: Move Histogram Logic into Strategy**
+
+Encapsulate the current histogram-based color accumulation into its own `histogram` strategy module:
+
+- Maintain the hit-count histogram and per-pixel RGB float buffers internally
+- Apply gamma, log-density normalization, and palette-based coloring entirely inside the strategy
+- Register via `registerStrategy('histogram', ...)`
+
+🌌 **Step 2: Add 'orbit-distance' Strategy**
+
+Implement an `orbit-distance` strategy that:
+
+- Tracks each sample's distance from the origin and normalizes by a scale parameter
+- Computes palette index `t = distance / scale` per sample
+- Accumulates and downsamples RGB float buffers similarly to the histogram strategy
+- Registers via `registerStrategy('orbit-distance', ...)`
+
 #### 6. **Preset Loader**
 
 - Imports JSON flame preset from `presets/`

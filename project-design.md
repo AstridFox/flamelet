@@ -26,27 +26,50 @@ This MVP aims to produce static color flame renders with JSON-based preset suppo
 
 #### 1. **Fractal Flame Presets**
 
-- JSON-serializable format
-- Preset contains canvas size, number of iterations, optional burn-in skip, gamma, and list of FlameFunctions
+A flame preset JSON file defines the parameters for rendering a fractal flame. It must conform to the following schema:
+
+```ts
+interface FlamePreset {
+  width: number;
+  height: number;
+  supersample?: number;
+  iterations?: number;
+  burnIn?: number;
+  gamma?: number;
+  palette?: string[];
+  functions: FlameFunction[];
+}
+
+interface FlameFunction {
+  affine: [number, number, number, number, number, number];
+  variations: Record<string, number>;
+  parameters?: Record<string, Record<string, number>>;
+  probability: number;
+  color?: number;
+}
+```
+
+See `src/types.ts` for the full TypeScript definitions.
 
 #### 2. **FlameFunction Format**
 
-Each function includes:
+A `FlameFunction` is an element of the `functions` array in a preset, describing one step of the iterated function system. Each function includes:
 
-- `affine`: 6-number array for 2D linear transform
-- `variations`: map of variation names to weights
-- `color`: optional value \[0–1] for future extension
-- `probability`: selection weight
+| Field        | Description                                                                 |
+| ------------ | --------------------------------------------------------------------------- |
+| `affine`     | 6-number array `[a, b, c, d, e, f]` for affine transform                    |
+| `variations` | Map of variation names (from `src/variations.ts`) to weights                |
+| `parameters` | Optional per-variation numeric parameters                                   |
+| `probability`| Selection weight for randomly choosing this function in the IFS sampling loop |
+| `color`      | Optional normalized palette index (0.0–1.0) for color mapping                |
 
 #### 3. **Variation Functions**
 
-Implemented variations include:
+All supported variation functions are exported from `src/variations.ts` and registered under their function name. The complete list is:
 
-- `linear`
-- `swirl`
-- `horseshoe`
-- `sinusoidal`
-  Each variation is a function `(x, y, params?) => [x', y']`, where `params` is an optional map of numeric parameters for parameterized variations.
+- `linear`, `swirl`, `horseshoe`, `sinusoidal`, `spherical`, `bubble`, `polar`, `handkerchief`, `heart`, `disc`, `rings`, `rings2`, `fan`, `spiral`, `diamond`, `ex`, `waves`, `fisheye`, `popcorn`, `eyefish`, `blade`, `bent`, `cross`, `cosine`, `curl`, `pdj`, `juliaN`, `fan2`, `popcorn2`, `blur`, `hyperbolic`, `mirrorx`, `mirrory`, `noise`
+
+Each variation is a function `(x, y, params?) => [x', y']`, where `params` is an optional numeric parameter map for parameterized variations (e.g. `curl`, `pdj`, `juliaN`, `fan2`, `popcorn2`).
 
 #### 4. **Affine Transformations**
 
@@ -70,30 +93,6 @@ Implemented variations include:
 
 - Displays color flame in canvas
 - Supports dynamic, interactive, and future extensions
-
----
-
-### 🛠 File Layout (MVP)
-
-```
-flamelet/
-├── index.html
-├── src/
-│   ├── main.ts
-│   ├── types.ts
-│   ├── variations.ts
-│   ├── flame.ts
-│   └── renderer.ts
-├── presets/
-│   └── basic.json
-├── .gitignore
-├── .eslintrc
-├── .eslintignore
-├── .prettierrc
-├── .prettierignore
-├── README.md
-└── tsconfig.json
-```
 
 ---
 

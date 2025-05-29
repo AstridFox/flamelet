@@ -57,15 +57,14 @@ export const angularMomentum: StrategyFactory<AngularMomentumOptions> = {
         if (xs.length > 1) {
           pushOrbit();
         }
-        // Auto-detect scale if not provided: max abs(total) across all orbits (fallback to 1)
-        const maxTotal =
-          orbits.length > 0
-            ? orbits.reduce((m, o) => Math.max(m, Math.abs(o.total)), 0)
-            : 0;
-        const scale = momentumScale != null ? momentumScale : maxTotal || 1;
-
-        console.log(
-          `Angular momentum scale: ${scale}, max total: ${maxTotal}`);
+        // Compute max absolute total (ignoring non-finite), fallback to 1 if zero or undefined
+        const totals = orbits
+          .map((o) => Math.abs(o.total))
+          .filter((t) => isFinite(t));
+        const maxTotal = totals.length > 0 ? Math.max(...totals) : 0;
+        const scale =
+          momentumScale != null ? momentumScale : maxTotal > 0 ? maxTotal : 1;
+        console.log(`Angular momentum scale: ${scale}, max total: ${maxTotal}`);
 
         for (const orbit of orbits) {
           let t = Math.abs(orbit.total) / scale;

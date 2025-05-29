@@ -33,6 +33,10 @@ export function getStrategyFactory(name: string): StrategyFactory {
   return factory;
 }
 
+export function getAllStrategyKeys(): string[] {
+  return Array.from(strategyRegistry.keys());
+}
+
 /**
  * Factory for sample-based strategies.
  * Applies getT on each sample to compute a palette index t.

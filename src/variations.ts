@@ -11,11 +11,12 @@ export type VariationFunction = (
 export const linear: VariationFunction = (x, y) => [x, y];
 
 export const swirl: VariationFunction = (x, y) => {
-  const r2 = x * x + y * y;
-  return [
-    x * Math.sin(r2) - y * Math.cos(r2),
-    x * Math.cos(r2) + y * Math.sin(r2),
-  ];
+  // Bound r2 to avoid huge arguments in sin/cos (prevent overflow/NaN)
+  const raw = x * x + y * y;
+  const r2 = Number.isFinite(raw) ? raw % (2 * Math.PI) : 0;
+  const sinr2 = Math.sin(r2);
+  const cosr2 = Math.cos(r2);
+  return [x * sinr2 - y * cosr2, x * cosr2 + y * sinr2];
 };
 
 export const horseshoe: VariationFunction = (x, y) => {
@@ -251,16 +252,22 @@ export const popcorn2: VariationFunction = (x, y, params = {}) => {
 export const mandelbrotWarp: VariationFunction = (x, y, params = {}) => {
   const iterations = params.iterations ?? 15;
   const escapeRadius = params.escapeRadius ?? 2;
-  let zx = x;
-  let zy = y;
-  const cx = x;
-  const cy = y;
+  // Prevent overflow by clamping initial point and stopping on non-finite
+  let zx = Number.isFinite(x) ? x : 0;
+  let zy = Number.isFinite(y) ? y : 0;
+  const cx = zx;
+  const cy = zy;
   for (let i = 0; i < iterations; i++) {
     const x2 = zx * zx - zy * zy + cx;
     const y2 = 2 * zx * zy + cy;
     zx = x2;
     zy = y2;
-    if (zx * zx + zy * zy > escapeRadius * escapeRadius) break;
+    if (
+      !Number.isFinite(zx) ||
+      !Number.isFinite(zy) ||
+      zx * zx + zy * zy > escapeRadius * escapeRadius
+    )
+      break;
   }
   return [zx, zy];
 };
@@ -278,14 +285,22 @@ export const juliaWarp: VariationFunction = (x, y, params = {}) => {
   const escapeRadius = params.escapeRadius ?? 2;
   const cx = params.cx ?? -0.4;
   const cy = params.cy ?? 0.6;
-  let zx = x;
-  let zy = y;
+  // Prevent starting with huge or non-finite values to limit overflow
+  let zx = Number.isFinite(x) ? x : 0;
+  let zy = Number.isFinite(y) ? y : 0;
   for (let i = 0; i < iterations; i++) {
     const x2 = zx * zx - zy * zy + cx;
     const y2 = 2 * zx * zy + cy;
     zx = x2;
     zy = y2;
-    if (zx * zx + zy * zy > escapeRadius * escapeRadius) break;
+    // stop on overflow or escape
+    if (
+      !Number.isFinite(zx) ||
+      !Number.isFinite(zy) ||
+      zx * zx + zy * zy > escapeRadius * escapeRadius
+    ) {
+      break;
+    }
   }
   return [zx, zy];
 };
@@ -300,10 +315,11 @@ export const juliaWarp: VariationFunction = (x, y, params = {}) => {
 export const burningShipWarp: VariationFunction = (x, y, params = {}) => {
   const iterations = params.iterations ?? 15;
   const escapeRadius = params.escapeRadius ?? 2;
-  let zx = x;
-  let zy = y;
-  const cx = x;
-  const cy = y;
+  // Prevent overflow by clamping initial point and stopping on non-finite
+  let zx = Number.isFinite(x) ? x : 0;
+  let zy = Number.isFinite(y) ? y : 0;
+  const cx = zx;
+  const cy = zy;
   for (let i = 0; i < iterations; i++) {
     const absX = Math.abs(zx);
     const absY = Math.abs(zy);
@@ -311,14 +327,42 @@ export const burningShipWarp: VariationFunction = (x, y, params = {}) => {
     const y2 = 2 * absX * absY + cy;
     zx = x2;
     zy = y2;
-    if (zx * zx + zy * zy > escapeRadius * escapeRadius) break;
+    if (
+      !Number.isFinite(zx) ||
+      !Number.isFinite(zy) ||
+      zx * zx + zy * zy > escapeRadius * escapeRadius
+    )
+      break;
   }
   return [zx, zy];
 };
 
 // --- Registry ---
 
-export const variations: Record<string, VariationFunction> = {
+/** Wrap a variation function to guard against NaN or infinite outputs. */
+function safeVariation(fn: VariationFunction, name: string): VariationFunction {
+  return (x, y, params) => {
+    try {
+      const [vx, vy] = fn(x, y, params);
+      if (!Number.isFinite(vx) || !Number.isFinite(vy)) {
+        console.warn(`variation '${name}' returned invalid coords`, {
+          vx,
+          vy,
+          x,
+          y,
+          params,
+        });
+        return [0, 0];
+      }
+      return [vx, vy];
+    } catch (err) {
+      console.error(`variation '${name}' threw error`, err);
+      return [0, 0];
+    }
+  };
+}
+
+const rawVariations: Record<string, VariationFunction> = {
   linear,
   swirl,
   horseshoe,
@@ -357,6 +401,12 @@ export const variations: Record<string, VariationFunction> = {
   mirrory,
   noise,
 };
+
+/** Variations registry with safety wrapping. */
+export const variations: Record<string, VariationFunction> = {};
+for (const [name, fn] of Object.entries(rawVariations)) {
+  variations[name] = safeVariation(fn, name);
+}
 
 const assert = (cond: boolean, msg: string): void => {
   if (!cond) throw new Error(msg);

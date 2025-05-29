@@ -22,8 +22,11 @@ export interface FlamePreset {
   iterations?: number;
   /** Optional number of initial iterations to skip (burn-in) before sampling. */
   burnIn?: number;
-  /** Optional palette of hex color strings (e.g., "#ff0000") to use instead of the default rainbow palette */
-  palette?: string[];
+  /**
+   * Optional palette of hex color strings to use instead of the default rainbow palette.
+   * Can be a single hex string (e.g., "#ff0000") or an array of hex strings.
+   */
+  palette?: string | string[];
   /**
    * Optional supersampling factor; internally render at width*supersample x height*supersample then downscale for antialiasing.
    */

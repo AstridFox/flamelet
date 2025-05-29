@@ -66,6 +66,7 @@ export const radialFlux: StrategyFactory<RadialFluxOptions> = {
             : 0;
         const scale = fluxScale != null ? fluxScale : maxFlux || 1;
 
+        // Radial flux normalization scale (auto-detected or overridden)
         console.log(`Radial flux scale: ${scale}, max flux: ${maxFlux}`);
 
         for (const orbit of orbits) {

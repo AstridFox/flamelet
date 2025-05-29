@@ -9,6 +9,10 @@ export function applyFlameFunction(
   const [a, b, c, d, e, f] = fn.affine;
   const x0 = a * x + b * y + c;
   const y0 = d * x + e * y + f;
+  // Clamp inputs to variations to avoid extreme values that cause overflow/NaN
+  const CLAMP_LIMIT = 100;
+  const cx = Math.max(-CLAMP_LIMIT, Math.min(CLAMP_LIMIT, x0));
+  const cy = Math.max(-CLAMP_LIMIT, Math.min(CLAMP_LIMIT, y0));
   let newX = 0;
   let newY = 0;
   const paramsMap = fn.parameters ?? {};
@@ -19,9 +23,23 @@ export function applyFlameFunction(
       throw new Error(`Unknown variation function: ${name}`);
     }
     const params = paramsMap[name];
-    const [vx, vy] = variationFn(x0, y0, params);
+    const [vx, vy] = variationFn(cx, cy, params);
+    if (!isFinite(vx) || !isFinite(vy)) {
+      console.error(
+        `applyFlameFunction: variation '${name}' returned invalid coords`,
+        { vx, vy, cx, cy, params }
+      );
+      continue;
+    }
     newX += weight * vx;
     newY += weight * vy;
+  }
+  if (!isFinite(newX) || !isFinite(newY)) {
+    console.error(
+      `applyFlameFunction: result invalid (newX=${newX}, newY=${newY}), falling back to affine-only coords`,
+      { a, b, c, d, e, f, x, y }
+    );
+    return [x0, y0];
   }
   return [newX, newY];
 }

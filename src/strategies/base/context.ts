@@ -20,7 +20,8 @@ export interface StrategyOptions {
   height: number;
   supersample: number;
   functions: FlameFunction[];
-  paletteDef?: string[];
+  /** Named palette key or array of hex color strings to use for coloring. */
+  paletteDef?: string | string[];
   gamma: number;
   distanceScale?: number;
   /** Number of samples to accumulate into an orbit before flushing (used by orbit-based strategies). */

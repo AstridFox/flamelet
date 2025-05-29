@@ -5,7 +5,7 @@
   "iterations": 500000,
   "gamma": 2.2,
   "coloring": {
-    "mode": "orbit-angle"
+    "mode": "orbit-distance"
   },
   "functions": [
     {

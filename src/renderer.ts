@@ -1,8 +1,6 @@
 import { FlamePreset } from './types';
 import { applyFlameFunction } from './flame';
-import './strategies/histogram';
-import './strategies/orbit-distance';
-import './strategies/orbit-angle';
+import './strategies';
 import { getStrategyFactory } from './strategies';
 
 /**

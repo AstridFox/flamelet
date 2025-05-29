@@ -112,7 +112,7 @@ getStrategyFactory(name) -> factory
 
 🔁 **Render Loop (Pseudocode)**
 
-```text
+````text
 strategyFactory = getStrategyFactory(preset.coloring.mode or 'histogram')
 strategy = strategyFactory.create(options)
 
@@ -122,6 +122,34 @@ for orbit in orbits:
 
 strategy.finalize(outputBuffer)
 drawToCanvas(outputBuffer)
+
+##### **Palette Utilities (Pseudocode)**
+
+```text
+createPaletteFromArray(colors: string[]): (t: number) => [r, g, b]
+registerPalette(name: string, fn: (t: number) => [r, g, b])
+getPalette(nameOrArray?: string | string[]): (t: number) => [r, g, b]
+````
+
+#### Strategy Factories and Structure
+
+The strategies are now implemented in a modular, layered structure:
+
+```
+/src/strategies
+  /base
+    context.ts          Shared accumulation, downsampling, gamma correction
+    palette.ts          Palette utilities and registry (createPaletteFromArray, registerPalette, getPalette)
+    orbit.ts            Orbit data structs
+    factories.ts        sampleFactory, orbitFactory, pseudoOrbitFactory, histogramFactory
+  /impl
+    histogram.ts        Density-based (histogram) strategy
+    orbit-angle.ts      Angle-based orbit strategy
+    orbit-distance.ts   Distance-based orbit strategy
+    angular-momentum.ts Angular-momentum proxy strategy
+  index.ts             Central registration of all strategies
+```
+
 ```
 
 #### 6. **Preset Loader**
@@ -156,3 +184,4 @@ drawToCanvas(outputBuffer)
 - HDR color buffer and tone mapping (float-based accumulation, Reinhard/log/exposure strategies)
 - Supersampling with downscale for smoother, high-detail output
 - Flamelet VJ mode for real-time visuals
+```

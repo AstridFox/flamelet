@@ -19,7 +19,7 @@
 
 ## ✨ Features
 
-- 🌈 **Colorful Fractal Flames** – Palette-driven coloring with customizable gamma correction and pluggable coloring strategies (histogram, orbit-distance, orbit-angle).
+- 🌈 **Colorful Fractal Flames** – Palette-driven coloring with customizable gamma correction and a modular, factory-based strategy architecture (histogram, orbit-distance, orbit-angle, angular-momentum, etc.).
 - 🔄 **Rich Variation Functions** – Includes a wide range of classic and exotic IFS variations (linear, swirl, horseshoe, sinusoidal, spherical, bubble, polar, handkerchief, heart, disc, rings, rings2, fan, spiral, diamond, ex, waves, fisheye, popcorn, eyefish, blade, bent, cross, cosine, curl, pdj, juliaN, fan2, popcorn2, blur, hyperbolic, mirrorx, mirrory, noise, mandelbrotWarp, juliaWarp, burningShipWarp) for stunning visual complexity.
 - 🔥 **Burn-In & Density Control** – Optional initial skip to reach the attractor, plus log-density normalization for smooth gradients.
 - ⚡ **High Performance** – Optimized in TypeScript with efficient sampling, runs entirely in the browser canvas.
@@ -71,30 +71,64 @@ Flame presets are defined as JSON files in the `presets/` directory. See `preset
 
 Key configuration fields:
 
-| Field                    | Description                                                      |
-| ------------------------ | ---------------------------------------------------------------- |
-| `width`                  | Canvas width in pixels                                           |
-| `height`                 | Canvas height in pixels                                          |
-| `supersample`            | Optional supersampling factor (antialiasing), default **1**       |
-| `iterations`             | Optional number of sampling iterations, default **100000**       |
-| `burnIn`                 | Optional initial iterations to skip before sampling, default **20** |
-| `gamma`                  | Optional gamma correction factor, default **1**                  |
-| `palette`                | Optional array of hex color strings for palette shading (default rainbow HSV palette) |
+| Field                    | Description                                                                                                   |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| `width`                  | Canvas width in pixels                                                                                        |
+| `height`                 | Canvas height in pixels                                                                                       |
+| `supersample`            | Optional supersampling factor (antialiasing), default **1**                                                   |
+| `iterations`             | Optional number of sampling iterations, default **100000**                                                    |
+| `burnIn`                 | Optional initial iterations to skip before sampling, default **20**                                           |
+| `gamma`                  | Optional gamma correction factor, default **1**                                                               |
+| `palette`                | Optional array of hex color strings for palette shading (default rainbow HSV palette)                         |
 | `coloring.mode`          | Optional coloring strategy to use (`histogram`, `orbit-distance`, `orbit-angle`, etc.), default **histogram** |
-| `coloring.distanceScale` | Optional (orbit-distance only) distance scale for distance-based coloring |
-| `functions`              | Array of FlameFunction objects (see structure below)             |
+| `coloring.distanceScale` | Optional (orbit-distance only) distance scale for distance-based coloring                                     |
+| `functions`              | Array of FlameFunction objects (see structure below)                                                          |
 
 Key FlameFunction fields:
 
-| Field         | Description                                                                   |
-| ------------- | ----------------------------------------------------------------------------- |
-| `affine`      | 6-number array `[a, b, c, d, e, f]` for affine transform                      |
-| `variations`  | Map of variation names to weights                                             |
-| `parameters`  | Optional per-variation numeric parameters (default `{}`)                       |
-| `probability` | Selection weight for randomly choosing this function in the IFS sampling loop |
+| Field         | Description                                                                                           |
+| ------------- | ----------------------------------------------------------------------------------------------------- |
+| `affine`      | 6-number array `[a, b, c, d, e, f]` for affine transform                                              |
+| `variations`  | Map of variation names to weights                                                                     |
+| `parameters`  | Optional per-variation numeric parameters (default `{}`)                                              |
+| `probability` | Selection weight for randomly choosing this function in the IFS sampling loop                         |
 | `color`       | Optional normalized palette index (0.0–1.0) for color mapping (default auto-indexed across functions) |
 
 See [project-design.md](project-design.md) for full details on the preset format.
+
+## 🎨 Advanced Usage: Strategies & Palettes API
+
+You can register and retrieve coloring strategies and palettes programmatically:
+
+```ts
+import {
+  registerStrategy,
+  getStrategyFactory,
+  registerPalette,
+  createPaletteFromArray,
+} from './src/strategies';
+
+// Register a custom palette
+registerPalette(
+  'myPalette',
+  createPaletteFromArray(['#ff0000', '#00ff00', '#0000ff'])
+);
+
+// Register a custom coloring strategy
+registerStrategy('myStrategy', myStrategyFactory);
+
+// Retrieve and use a strategy
+const factory = getStrategyFactory('myStrategy');
+const strategy = factory.create({
+  width: 800,
+  height: 600,
+  supersample: 2,
+  functions: flameFunctions,
+  paletteDef: ['#fff', '#000'],
+  gamma: 1,
+  distanceScale: 1,
+});
+```
 
 ---
 

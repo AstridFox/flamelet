@@ -34,6 +34,8 @@ export interface FlamePreset {
   /** Optional coloring strategy options */
   coloring?: ColoringOptions;
   /** Internal cache of fractal-space bounds for domain-scaling transforms (minX, minY, maxX, maxY). */
+  /** Internal cache of full iterations count for domain-bound dry-run (for drag/interactive use). */
+  _origIterations?: number;
   domainBounds?: {
     minX: number;
     minY: number;

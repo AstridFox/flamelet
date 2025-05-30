@@ -85,7 +85,8 @@ export function renderFlame(
       }
     } else {
       let tx = x, ty = y;
-      for (let i = 0; i < iterations; i++) {
+      const dryRunIterations = preset._origIterations ?? iterations;
+      for (let i = 0; i < dryRunIterations; i++) {
         const r = Math.random() * totalProb;
         const fnIdx = cumProbs.findIndex((p) => r < p);
         const idx = fnIdx >= 0 ? fnIdx : functions.length - 1;

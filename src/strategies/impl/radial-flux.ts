@@ -81,6 +81,8 @@ export const radialFlux: StrategyFactory<RadialFluxOptions> = {
       },
     };
 
+    // Enable domain-bounds override for finalTransform sample-space mapping
+    (strategy as any).setDomainBounds = context.setDomainBounds.bind(context);
     return strategy;
   },
 };

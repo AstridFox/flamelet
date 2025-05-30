@@ -59,6 +59,7 @@ export function sampleFactory(
           context.finalize(outputBuffer);
         },
       };
+      (strategy as any).setDomainBounds = context.setDomainBounds.bind(context);
       return strategy;
     },
   };
@@ -114,6 +115,7 @@ export function orbitFactory(getT: (orbit: Orbit) => number): StrategyFactory {
         current = { xs: [], ys: [], t: 0 };
       }
 
+      (strategy as any).setDomainBounds = context.setDomainBounds.bind(context);
       return strategy;
     },
   };
@@ -145,6 +147,7 @@ export function pseudoOrbitFactory(
           context.finalize(outputBuffer);
         },
       };
+      (strategy as any).setDomainBounds = context.setDomainBounds.bind(context);
       return strategy;
     },
   };
@@ -179,6 +182,7 @@ export function histogramFactory(): StrategyFactory {
           context.finalize(outputBuffer);
         },
       };
+      (strategy as any).setDomainBounds = context.setDomainBounds.bind(context);
       return strategy;
     },
   };

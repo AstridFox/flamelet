@@ -3,3 +3,18 @@ body {
   line-height: 1.6;
   background-color: black;
 }
+#controls {
+  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  margin-top: 1em;
+}
+#controls label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9em;
+}
+#controls input {
+  margin-top: 0.2em;
+}

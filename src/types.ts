@@ -33,6 +33,23 @@ export interface FlamePreset {
   supersample?: number;
   /** Optional coloring strategy options */
   coloring?: ColoringOptions;
+  /** Internal cache of fractal-space bounds for domain-scaling transforms (minX, minY, maxX, maxY). */
+  domainBounds?: {
+    minX: number;
+    minY: number;
+    maxX: number;
+    maxY: number;
+  };
+
+  /** Optional affine transform applied to fractal-space sample coordinates before mapping to the pixel grid.
+   * rotation in radians, uniform scale, and translation offsets (in pixel units).
+   */
+  finalTransform?: {
+    rotation?: number;
+    scale?: number;
+    translateX?: number;
+    translateY?: number;
+  };
 }
 
 export interface ColoringOptions {

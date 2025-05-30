@@ -71,18 +71,19 @@ Flame presets are defined as JSON files in the `presets/` directory. See `preset
 
 Key configuration fields:
 
-| Field                    | Description                                                                                                   |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| `width`                  | Canvas width in pixels                                                                                        |
-| `height`                 | Canvas height in pixels                                                                                       |
-| `supersample`            | Optional supersampling factor (antialiasing), default **1**                                                   |
-| `iterations`             | Optional number of sampling iterations, default **100000**                                                    |
-| `burnIn`                 | Optional initial iterations to skip before sampling, default **20**                                           |
-| `gamma`                  | Optional gamma correction factor, default **1**                                                               |
-| `palette`                | Optional array of hex color strings for palette shading (default rainbow HSV palette)                         |
-| `coloring.mode`          | Optional coloring strategy to use (`histogram`, `orbit-distance`, `orbit-angle`, etc.), default **histogram** |
-| `coloring.distanceScale` | Optional (orbit-distance only) distance scale for distance-based coloring                                     |
-| `functions`              | Array of FlameFunction objects (see structure below)                                                          |
+| Field                    | Description                                                                                                                |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| `width`                  | Canvas width in pixels                                                                                                     |
+| `height`                 | Canvas height in pixels                                                                                                    |
+| `supersample`            | Optional supersampling factor (antialiasing), default **1**                                                                |
+| `iterations`             | Optional number of sampling iterations, default **100000**                                                                 |
+| `burnIn`                 | Optional initial iterations to skip before sampling, default **20**                                                        |
+| `gamma`                  | Optional gamma correction factor, default **1**                                                                            |
+| `palette`                | Optional array of hex color strings for palette shading (default rainbow HSV palette)                                      |
+| `coloring.mode`          | Optional coloring strategy to use (`histogram`, `orbit-distance`, `orbit-angle`, etc.), default **histogram**              |
+| `coloring.distanceScale` | Optional (orbit-distance only) distance scale for distance-based coloring                                                  |
+| `finalTransform`         | Optional affine transform applied to fractal-space coordinates before pixel mapping (rotation in radians, scale, translateX, translateY). |
+| `functions`              | Array of FlameFunction objects (see structure below)                                                                       |
 
 Key FlameFunction fields:
 

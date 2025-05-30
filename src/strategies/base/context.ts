@@ -70,6 +70,10 @@ export class StrategyContext {
   private minY = Infinity;
   private maxX = -Infinity;
   private maxY = -Infinity;
+  private overrideMinX?: number;
+  private overrideMinY?: number;
+  private overrideMaxX?: number;
+  private overrideMaxY?: number;
 
   constructor(options: StrategyOptions) {
     this.width = options.width;
@@ -99,19 +103,11 @@ export class StrategyContext {
    * Writes RGBA [0-255] values into outputBuffer.
    */
   finalize(outputBuffer: Uint8ClampedArray): void {
-    const {
-      width,
-      height,
-      scale,
-      gamma,
-      xs,
-      ys,
-      cols,
-      minX,
-      minY,
-      maxX,
-      maxY,
-    } = this;
+    const { width, height, scale, gamma, xs, ys, cols } = this;
+    const minX = this.overrideMinX !== undefined ? this.overrideMinX : this.minX;
+    const minY = this.overrideMinY !== undefined ? this.overrideMinY : this.minY;
+    const maxX = this.overrideMaxX !== undefined ? this.overrideMaxX : this.maxX;
+    const maxY = this.overrideMaxY !== undefined ? this.overrideMaxY : this.maxY;
     const rangeX = maxX - minX || 1;
     const rangeY = maxY - minY || 1;
     const highWidth = width * scale;
@@ -171,5 +167,16 @@ export class StrategyContext {
         }
       }
     }
+  }
+
+  /**
+   * Override the domain bounds used for mapping fractal-space coordinates to pixels.
+   * When set, finalize() will use these bounds instead of dynamically computed min/max.
+   */
+  public setDomainBounds(minX: number, minY: number, maxX: number, maxY: number): void {
+    this.overrideMinX = minX;
+    this.overrideMinY = minY;
+    this.overrideMaxX = maxX;
+    this.overrideMaxY = maxY;
   }
 }

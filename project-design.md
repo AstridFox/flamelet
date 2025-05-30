@@ -38,6 +38,16 @@ interface FlamePreset {
   gamma?: number;
   palette?: string[];
   coloring?: { mode?: string; distanceScale?: number };
+  /** Internal cache of fractal-space bounds for domain-scaling transforms (minX, minY, maxX, maxY). */
+  domainBounds?: { minX: number; minY: number; maxX: number; maxY: number; };
+
+  /** Optional affine transform applied to fractal-space coordinates before pixel mapping (rotation in radians, scale, translateX, translateY) */
+  finalTransform?: {
+    rotation?: number;
+    scale?: number;
+    translateX?: number;
+    translateY?: number;
+  };
   functions: FlameFunction[];
 }
 
@@ -76,6 +86,7 @@ Each variation is a function `(x, y, params?) => [x', y']`, where `params` is an
 
 - Apply 2D affine transform to input point
 - Combine with variation results based on weights
+- Optionally apply a final affine transform (rotation, scale, translation) to each sample before coloring
 
 #### 5. **Renderer**
 
@@ -125,11 +136,43 @@ drawToCanvas(outputBuffer)
 
 ##### **Palette Utilities (Pseudocode)**
 
+
 ```text
 createPaletteFromArray(colors: string[]): (t: number) => [r, g, b]
 registerPalette(name: string, fn: (t: number) => [r, g, b])
 getPalette(nameOrArray?: string | string[]): (t: number) => [r, g, b]
 ````
+
+##### **Final Transform (Domain-Scaling) Pseudocode**
+
+```text
+// First, sample the fractal to compute original fractal-space bounds:
+origMinX = +∞; origMinY = +∞; origMaxX = -∞; origMaxY = -∞;
+let x0, y0 = initial burn-in state;
+for i from 1 to iterations:
+  [x0, y0] = applyFlameFunction(fn_i, x0, y0)
+  origMinX = min(origMinX, x0)
+  origMinY = min(origMinY, y0)
+  origMaxX = max(origMaxX, x0)
+  origMaxY = max(origMaxY, y0)
+
+// Then accumulate samples with transform baked in:
+for i from 1 to iterations:
+  [x0, y0] = applyFlameFunction(fn_i, x0, y0)
+  // center about original bounds
+  cx = (origMinX + origMaxX) / 2
+  cy = (origMinY + origMaxY) / 2
+  dx = x0 - cx
+  dy = y0 - cy
+  scaledX = dx * (transform.scale or 1)
+  scaledY = dy * (transform.scale or 1)
+  rx = scaledX * cos(transform.rotation or 0) - scaledY * sin(transform.rotation or 0)
+  ry = scaledX * sin(transform.rotation or 0) + scaledY * cos(transform.rotation or 0)
+  // apply translation in pixel units, converted to fractal-space:
+  fx = rx + cx + (transform.translateX or 0) * (origMaxX - origMinX) / width
+  fy = ry + cy + (transform.translateY or 0) * (origMaxY - origMinY) / height
+  accumulateSample(fx, fy)
+```
 
 ##### **Angular Momentum Strategy (Pseudocode)**
 
